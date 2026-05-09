@@ -4,6 +4,7 @@
 
 *{
     font-family:Outfit;
+    background: white;
 }
 
 select,input,textarea{
@@ -13,6 +14,6 @@ select,input,textarea{
 }
 
 .active{
-    background-color: rgb(237, 200, 219);
-    border-color: #e3a2c1;
+    background-color: white;
+    border-color: #4b484a;
 }
