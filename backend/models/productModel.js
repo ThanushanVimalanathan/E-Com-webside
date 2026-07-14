@@ -13,6 +13,11 @@ const productSchema = new mongoose.Schema({
 
 })
 
+productSchema.index({category: 1, subCategory: 1});
+productSchema.index({category: 1, price: 1});
+productSchema.index({bestseller: 1, date: -1});
+productSchema.index({name: "text", description: "text"});
+
 const productModel =mongoose.models.product || mongoose.model("product", productSchema);
 
 export default productModel;

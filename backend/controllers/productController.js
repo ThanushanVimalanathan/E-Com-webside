@@ -52,15 +52,57 @@ const addProduct = async (req, res) => {
 
 // funtion list product
 const listProduct = async (req, res) => {
+
     try {
 
-        const products = await productModel.find({});
-        res.json({ success: true, products })
+        // Pagination
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 20;
+
+        const skip = (page - 1) * limit;
 
 
-    } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        // Filters from frontend
+        const {category,subCategory,sort} = req.query;
+        let filter = {};
+
+        if(category){
+            filter.category = category;
+        }
+
+        if(subCategory){
+            filter.subCategory = subCategory;
+        }
+
+        // Sorting
+        let sortOption = {date:-1};
+
+        if(sort === "low-high"){
+            sortOption = {
+                price:1
+            };
+        }
+
+        if(sort === "high-low"){
+            sortOption = {
+                price:-1
+            };
+        }
+
+
+
+        // Get products
+        const products = await productModel.find(filter).sort(sortOption).skip(skip).limit(limit);
+
+        // Count total products
+        const totalProducts = await productModel.countDocuments(filter);
+
+        res.json({ success:true, products,currentPage:page,totalPages:Math.ceil(totalProducts / limit),totalProducts});
+
+
+    } catch(error){
+        console.log(error);
+        res.json({success:false,message:error.message});
 
     }
 }

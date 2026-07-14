@@ -100,9 +100,7 @@ const ShopContextProvider = (props) => {
     const getCartAmount = () => {
 
         let totalAmount = 0;
-        
-        for (const items in cartItems) {
-            
+        for (const items in cartItems) { 
             let itemInfo = products.find((product) => product._id === items);
             if (!itemInfo) continue;
             for (const item in cartItems[items]) {
@@ -120,21 +118,24 @@ const ShopContextProvider = (props) => {
 
     }
 
-    const getProductData = async () => {
-        try {
+    const getProductData = async(page=1,category="",subCategory="",sort="")=>{
 
-            const response = await axios.get(backendUrl + '/api/product/list')
-            if (response.data.success) {
-                setProducts(response.data.products)
-            } else {
-                toast.error(response.data.message)
-            }
+        try{
 
-        } catch (error) {
-            console.log(error)
-            toast.error(error.message)
+
+        const response = await axios.get(backendUrl + "/api/product/list",{params:{page,limit:20,category,subCategory,sort}});
+
+        if(response.data.success){
+            setProducts(response.data.products);
         }
+
+    }catch(error){
+
+        toast.error(error.message);
+
     }
+
+}
 
     const getUserCart = async (token) => {
         try {
